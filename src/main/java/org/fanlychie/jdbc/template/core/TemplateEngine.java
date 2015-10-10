@@ -1,14 +1,11 @@
 package org.fanlychie.jdbc.template.core;
 
 import java.io.StringWriter;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 import org.apache.velocity.runtime.RuntimeConstants;
-import org.fanlychie.jdbc.template.context.SpellingUtil;
-import org.fanlychie.jdbc.template.context.Utilities;
 import org.fanlychie.jdbc.template.exception.RuntimeCastException;
 import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
 
@@ -18,9 +15,6 @@ import org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader;
  * @author fanlychie
  */
 public class TemplateEngine {
-	
-	// 共用的上下文
-	private Map<String, Object> commonContext;
 
 	/**
 	 * 解析模板
@@ -59,7 +53,6 @@ public class TemplateEngine {
 	 */
 	private VelocityContext buildContext(Map<String, Object> contextParams) {
 		VelocityContext context = new VelocityContext();
-		contextParams.putAll(getCommonContext());
 		for (String param : contextParams.keySet()) {
 			context.put(param, contextParams.get(param));
 		}
@@ -69,30 +62,17 @@ public class TemplateEngine {
 	/**
 	 * 获取 Velocity 引擎对象
 	 * 
-	 * @return VelocityEngine
+	 * @return
 	 * @throws Throwable
 	 */
 	private VelocityEngine getVelocityEngine() throws Throwable {
 		Properties prop = new Properties();
-		prop.put(RuntimeConstants.RESOURCE_LOADER, "classpath");
+		prop.load(ClassLoader.getSystemResourceAsStream("velocity.properites"));
 		prop.put("classpath.resource.loader.class", ClasspathResourceLoader.class.getName());
+		prop.put(RuntimeConstants.RESOURCE_LOADER, "classpath");
 		VelocityEngine engine = new VelocityEngine();
 		engine.init(prop);
 		return engine;
-	}
-	
-	/**
-	 * 获取共用的上下文
-	 * 
-	 * @return Map<String, Object>
-	 */
-	private Map<String, Object> getCommonContext() {
-		if (commonContext == null) {
-			commonContext = new HashMap<String, Object>();
-			commonContext.put("Utilities", new Utilities());
-			commonContext.put("SpellingUtil", new SpellingUtil());
-		}
-		return commonContext;
 	}
 	
 }

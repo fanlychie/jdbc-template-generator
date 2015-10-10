@@ -6,6 +6,8 @@ import java.util.Map;
 import org.fanlychie.jdbc.template.Template;
 import org.fanlychie.jdbc.template.TemplateFileQueue;
 import org.fanlychie.jdbc.template.TemplateFileQueue.Entry;
+import org.fanlychie.jdbc.template.context.Obj;
+import org.fanlychie.jdbc.template.context.Str;
 import org.fanlychie.jdbc.template.schema.Table;
 
 /**
@@ -20,6 +22,10 @@ public class TemplateProducer {
 	
 	// 模板文件路径
 	private String templateVmsPath;
+	
+	private static final Obj OBJ = new Obj();
+	
+	private static final Str STR = new Str();
 
 	/**
 	 * 构建模板生产者
@@ -43,6 +49,8 @@ public class TemplateProducer {
 	 *            模板使用到的参数表
 	 */
 	public void produce(Collection<Table> tables, Template template, Map<String, Object> params) {
+		params.put("obj", OBJ);
+		params.put("str", STR);
 		if (template.isMultiFileMode()) {
 			produceMultiTemplateFile(tables, template, params);
 		} else {
