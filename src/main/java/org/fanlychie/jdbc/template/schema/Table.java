@@ -12,11 +12,14 @@ public class Table implements Comparable<Table> {
 	
 	// 表主键
 	private String pk;
+	
+	// 源主键
+	private String opk;
 
 	// 表名称
 	private String name;
 	
-	// 源名称, 与数据库表的名称一致
+	// 源名称
 	private String origin;
 	
 	// 表的列集
@@ -31,6 +34,14 @@ public class Table implements Comparable<Table> {
 
 	public void setPk(String pk) {
 		this.pk = pk;
+	}
+
+	public String getOpk() {
+		return opk;
+	}
+
+	public void setOpk(String opk) {
+		this.opk = opk;
 	}
 
 	public String getName() {

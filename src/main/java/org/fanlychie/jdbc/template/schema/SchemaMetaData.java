@@ -11,9 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.commons.lang.StringUtils;
-import org.fanlychie.jdbc.template.context.SpellingUtil;
 import org.fanlychie.jdbc.template.exception.RuntimeCastException;
 
 /**
@@ -89,11 +87,12 @@ public class SchemaMetaData {
 		table.columnOrigin = new HashMap<String, String>();
 		String separator = schema.getTableNameSeparator();
 		// 表名进行驼峰标识拼写
-		String name = SpellingUtil.capitalize(tablename, separator);
+		String name = toCapitalize(tablename, separator);
 		table.setName(name);
 		table.setOrigin(tablename);
-		table.setPk(getPrimaryKey(tablename));
 		table.setColumns(getColumns(table));
+		table.setOpk(getPrimaryKey(tablename));
+		table.setPk(toCapitalize(table.getOpk(), schema.getColumnNameSeparator(), false));
 		Collections.sort(table.getColumns());
 		return table;
 	}
@@ -158,7 +157,7 @@ public class SchemaMetaData {
 		Column column = new Column(table);
 		String separator = schema.getColumnNameSeparator();
 		// 列名进行驼峰标识拼写
-		String columnName = SpellingUtil.capitalize(name, separator, false);
+		String columnName = toCapitalize(name, separator, false);
 		table.columnOrigin.put(columnName, name);
 		column.setName(columnName);
 		column.setRemark(remark);
@@ -184,6 +183,68 @@ public class SchemaMetaData {
 		ResultSet rs = metaData.getPrimaryKeys(null, null, tablename);
 		if (rs.next()) {
 			return rs.getString("COLUMN_NAME");
+		}
+		return null;
+	}
+
+	/**
+	 * 首字母大写, 在遇到指定的分隔符时, 去掉分隔符并将分隔符后的第一个字母大写
+	 * 
+	 * @param str
+	 *            字符串
+	 * @param separator
+	 *            分隔符
+	 * @return
+	 */
+	private String toCapitalize(String str, String separator) {
+		return toCapitalize(str, separator, true);
+	}
+
+	/**
+	 * 在遇到指定的分隔符时, 去掉分隔符并将分隔符后的第一个字母大写
+	 * 
+	 * @param str
+	 *            字符串
+	 * @param separator
+	 *            分隔符
+	 * @param initialUpperCase
+	 *            是否将字符串的首字母大写
+	 * @return
+	 */
+	private String toCapitalize(String str, String separator, boolean initialUpperCase) {
+		if (str == null) {
+			return null;
+		}
+		if (separator != null && str.contains(separator)) {
+			int index = 0;
+			String target = "";
+			String[] sources = str.split(separator);
+			if (!initialUpperCase) {
+				index = 1;
+				target = sources[0].toLowerCase();
+			}
+			for (int i = index; i < sources.length; i++) {
+				target += toCapitalize(sources[i]);
+			}
+			return target;
+		} else {
+			return initialUpperCase ? toCapitalize(str) : str.toLowerCase();
+		}
+	}
+	
+	/**
+	 * 首字母大写
+	 * 
+	 * @param str
+	 *            字符串
+	 * @return
+	 */
+	private String toCapitalize(String str) {
+		if (str != null && str.length() > 0) {
+			char[] ch = str.toCharArray();
+			// 首字母大写
+			ch[0] = Character.toUpperCase(ch[0]);
+			return new String(ch);
 		}
 		return null;
 	}
