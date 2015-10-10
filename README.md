@@ -152,7 +152,7 @@ setContextParams 方法可以动态设置一些模板文件需要用到的参数
 
 getOutputFilePath 方法返回该模板文件生成的具体路径。
 
-isMultiFileMode 方法，true 表示多文件模式（一个表生成一个模板类），false 表示单文件模式（多个表生成一个模板类）。单文件和多文件模式的区分在于模板类是生成单个还是多个。
+isMultiFileMode 方法，true 表示多文件模式（多个表生成多个模板类），false 表示单文件模式（多个表生成一个模板类）。单文件和多文件模式的区分在于模板类是生成单个还是多个。
 
 isForceOverride 方法，true 表示文件若已经存在则强制覆盖，false 表示文件若已经存在则不再生成。
 
