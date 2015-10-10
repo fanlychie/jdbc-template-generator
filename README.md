@@ -164,3 +164,108 @@ public static void main(String[] args) {
 	TemplateGenerator.generate();
 }
 ```
+
+附 jdbc.properties 文件内容
+
+
+```
+jdbc.username = root
+jdbc.password = root
+jdbc.driver = com.mysql.jdbc.Driver
+jdbc.url = jdbc:mysql://127.0.0.1:3306/mysql
+```
+
+使用 mysql 自带的 mysql 数据库测试。其中 func 表生成的类文件效果（内容未做任何处理）
+
+
+```
+package org.fanlychie.model;
+
+public class Func {
+	
+	/**  */
+	private String name;
+	
+	/**  */
+	private String dl;
+	
+	/**  */
+	private Boolean ret;
+	
+	/**  */
+	private String type;
+	
+ 	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public String getDl() {
+		return dl;
+	}
+	
+	public void setDl(String dl) {
+		this.dl = dl;
+	}
+	
+	public Boolean isRet() {
+		return ret;
+	}
+	
+	public void setRet(Boolean ret) {
+		this.ret = ret;
+	}
+	
+	public String getType() {
+		return type;
+	}
+	
+	public void setType(String type) {
+		this.type = type;
+	}
+	
+ 	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("name = ").append(name).append(", ");
+		builder.append("dl = ").append(dl).append(", ");
+		builder.append("ret = ").append(ret).append(", ");
+		builder.append("type = ").append(type);
+		return builder.toString();
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Func other = (Func) obj;
+		if (name == null) {
+			if (other.name != null) {
+				return false;
+			}
+		} else if (!name.equals(other.name)) {
+			return false;
+		}
+		return true;
+	}
+
+}
+```
