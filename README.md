@@ -4,7 +4,7 @@
 
 从托管仓库中获取最新依赖包，[查看如何获取依赖包](https://github.com/fanlychie/maven-repo)。
 
-**2. 获取类库**
+**2. 配置生成器配置文件**
 
 在项目类路径下新建文件 **jdbc-template-generator.xml**。
 
@@ -67,7 +67,7 @@
     </scanner>
     
     <!-- 
-        约定 ：模板文件名为 Domain.vm, 则模板类名称须为 Domain.java 或 DomainTemplate.java。
+        约定 ：若模板文件名为 Domain.vm, 则模板类名称须为 Domain.java 或 DomainTemplate.java。
         作为模板类文件须实现 org.fanlychie.jdbc.template.Template 接口, 为模板文件提供生成参数的支持。
         模板文件(*.vm)内置变量：
         1．多文件模式, 内置变量 table(表模型)、columns(列集合), 具体参考 org.fanlychie.jdbc.template.schema.Table, org.fanlychie.jdbc.template.schema.Column
@@ -81,4 +81,86 @@
     -->
     
 </configuration>
+```
+
+**3. 编写模板文件**
+
+新建模板文件 Domain.vm。
+
+
+```
+package ${basePackage}.model;
+
+public class $table.name {
+	
+#fields #getset #tostring
+
+#equals($table.pk)
+
+}
+```
+
+${basePackage} 引用了 **jdbc-template-generator.xml** 中自定义的属性值。
+
+$table.name 使用内置的 table 变量得到表名称作为类名称。
+
+\#fields 使用内置指令生成表的字段域。
+
+\#getset 使用内置指令生成表的字段域的 getters 和 setters 方法。
+
+\#tostring 使用内置指令生成 toString() 方法。
+
+\#equals($table.pk) 使用内置指令根据表的主键字段生成 equals() 和 hashCode() 方法。
+
+**4. 编写模板文件对应的类**
+
+新建模板类文件 DomainTemplate.java
+
+
+```
+package org.fanlychie.jdbc.template.test;
+
+import java.util.Map;
+import org.fanlychie.jdbc.template.Template;
+
+public class DomainTemplate implements Template {
+
+	@Override
+	public void setContextParams(Map<String, Object> params) {
+		
+	}
+
+	@Override
+	public String getOutputFilePath(String tableName) {
+		return "src/main/java/org/fanlychie/model/" + tableName + ".java";
+	}
+
+	@Override
+	public boolean isMultiFileMode() {
+		return true;
+	}
+
+	@Override
+	public boolean isForceOverride() {
+		return true;
+	}
+
+}
+```
+
+setContextParams 方法可以动态设置一些模板文件需要用到的参数值，如 params.put("key", value);
+
+getOutputFilePath 方法返回该模板文件生成的具体路径。
+
+isMultiFileMode 方法，true 表示多文件模式（一个表生成一个模板类），false 表示单文件模式（多个表生成一个模板类）。单文件和多文件模式的区分在于模板类是生成单个还是多个。
+
+isForceOverride 方法，true 表示文件若已经存在则强制覆盖，false 表示文件若已经存在则不再生成。
+
+**5. 执行模板生成**
+
+
+```
+public static void main(String[] args) {
+	TemplateGenerator.generate();
+}
 ```
