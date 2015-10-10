@@ -1,0 +1,19 @@
+#set($_count = 1)
+#set($_size = $columns.size())
+	@Override
+	public String toString() {
+#if($_size == 1)
+		return "$columns.get(0).name = " + $columns.get(0).name;
+#else
+		StringBuilder builder = new StringBuilder();
+#foreach($column in $columns)
+#if($_count == $_size)
+		builder.append("$column.name = ").append($column.name);
+#else
+		builder.append("$column.name = ").append($column.name).append(", ");
+#end
+#set($_count = $_count + 1)
+#end
+#end
+		return builder.toString();
+	}

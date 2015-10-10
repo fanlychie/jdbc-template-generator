@@ -1,0 +1,4 @@
+userdirective = org.fanlychie.jdbc.template.directive.GenerateFieldsDirective,\
+				org.fanlychie.jdbc.template.directive.GenerateGetSetDirective,\
+				org.fanlychie.jdbc.template.directive.GenerateToStringDirective,\
+				org.fanlychie.jdbc.template.directive.GenerateEqualsDirective

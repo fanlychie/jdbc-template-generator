@@ -1,0 +1,10 @@
+#foreach($column in $columns)
+	public $column.type $str.getOrIs($column.type)$str.toCapitalize($column.name)() {
+		return $column.name;
+	}
+	
+	public void set$str.toCapitalize($column.name)($column.type $column.name) {
+		this.$column.name = $column.name;
+	}
+	
+#end

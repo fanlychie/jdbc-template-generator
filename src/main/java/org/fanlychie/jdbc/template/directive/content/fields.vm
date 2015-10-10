@@ -1,0 +1,5 @@
+#foreach($column in $columns)
+	/** $column.remark */
+	private $column.type $column.name;
+	
+#end

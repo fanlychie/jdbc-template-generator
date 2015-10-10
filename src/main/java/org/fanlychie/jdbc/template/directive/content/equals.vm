@@ -1,0 +1,69 @@
+#if($obj.isNull($_params))
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+#foreach($column in $columns)
+		result = prime * result + (($column.name == null) ? 0 : ${column.name}.hashCode());
+#end
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		$table.name other = ($table.name) obj;
+#foreach($column in $columns)
+		if ($column.name == null) {
+			if (other.${column.name} != null) {
+				return false;
+			}
+		} else if (!${column.name}.equals(other.${column.name})) {
+			return false;
+		}
+#end
+		return true;
+	}
+#else
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+#foreach($_param in $_params)
+		result = prime * result + (($_param == null) ? 0 : ${_param}.hashCode());
+#end
+		return result;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		$table.name other = ($table.name) obj;
+#foreach($_param in $_params)
+		if ($_param == null) {
+			if (other.${_param} != null) {
+				return false;
+			}
+		} else if (!${_param}.equals(other.${_param})) {
+			return false;
+		}
+#end
+		return true;
+	}
+#end
