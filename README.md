@@ -6,7 +6,7 @@
 
 **2. 配置生成器配置文件**
 
-在项目类路径下新建文件 **jdbc-template-generator.xml**。
+在项目类路径下新建文件 **jdbc-template-generator.xml**
 
 
 ```
@@ -85,7 +85,7 @@
 
 **3. 编写模板文件**
 
-新建模板文件 Domain.vm。
+新建模板文件 Domain.vm
 
 
 ```
